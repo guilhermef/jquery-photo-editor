@@ -7,15 +7,17 @@
     <title>JQuery Photo Editor example</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <link rel="stylesheet" href="../deps/jquery-ui-1.8.17.custom/css/smoothness/jquery-ui-1.8.17.custom.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="../deps/jquery.imgareaselect-0.9.8/css/imgareaselect-animated.css" type="text/css" media="all" />
     <script src="../deps/jquery-1.7.1.min.js" type="text/javascript"></script>
     <script src="../deps/jquery-ui-1.8.17.custom/js/jquery-ui-1.8.17.custom.min.js" type="text/javascript"></script>
+    <script src="../deps/jquery.imgareaselect-0.9.8/scripts/jquery.imgareaselect.min.js" type="text/javascript"></script>
     <script src="../deps/pixastic.custom.js" type="text/javascript"></script>
     <script src="../src/jquery-photo-editor.js" type="text/javascript"></script>
 </head>
 <body>
     <script type="text/javascript">
         $(function(){
-            $("img.editable").JPhotoEditor({editableClass: ""});
+            $("img.editable").JPhotoEditor();
         });
     </script>
     <div>
