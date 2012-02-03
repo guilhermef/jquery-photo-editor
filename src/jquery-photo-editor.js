@@ -109,14 +109,14 @@
         };
         
         selection = image().imgAreaSelect({instance: true,handles: true});
-        $(document).keydown(function(e){
+        $(window).bind("keydown",function(e){
           if(e.keyCode == 16){
             selection.setOptions({instance: true,handles: true, aspectRatio:"1:1"});
             selection.update();
           };
         });
         
-        $(document).keyup(function(e){
+        $(window).bind("keyup",function(e){
           if(e.keyCode == 16){
             selection.setOptions({instance: true,handles: true, aspectRatio: false});
             selection.update();
