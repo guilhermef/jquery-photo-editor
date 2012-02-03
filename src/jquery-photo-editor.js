@@ -48,6 +48,8 @@
              "<input id='width' type='text' size='4' name='width' />",
              "<span class='title'>height: </span>",
              "<input id='height' type='text' size='4' name='height' />",
+             "<div class='suggestion'>",
+             "</div>",
            "</div>",
          "</div>"
         ].join("");
@@ -91,10 +93,22 @@
         if(selection){
           selection.cancelSelection();
         };
-        selection = image().imgAreaSelect({
-                instance: true,
-                handles: true,
+        
+        selection = image().imgAreaSelect({instance: true,handles: true});
+        $(document).keydown(function(e){
+          if(e.keyCode == 16){
+            selection.setOptions({instance: true,handles: true, aspectRatio:"1:1"});
+            selection.update();
+          };
         });
+        
+        $(document).keyup(function(e){
+          if(e.keyCode == 16){
+            selection.setOptions({instance: true,handles: true, aspectRatio: false});
+            selection.update();
+          }
+        });
+        
       };
       
       function _updateImage(action, options){
@@ -102,14 +116,18 @@
         _bindSelectBox();
       };
       
+      function _rule_of_thumb(x1, y1, x2){
+        return (x2 * y1) / x1;
+      };
+      
       function _definePreviewSize(){
           var result = {};
           if(image().width() > image().height()){
               result.width = settings.previewSize;
-              result.height = (image().height() * settings.previewSize) / image().width();
+              result.height = _rule_of_thumb(image().width(), settings.previewSize, image().height())
           }else{
               result.height = settings.previewSize;
-              result.width = (image().width() * settings.previewSize) / image().height()
+              result.width = _rule_of_thumb(image().height(), settings.previewSize, image().width())
           };
           return result;
       };
@@ -145,7 +163,6 @@
           },
           buttons: {
             Save: function() {
-              debugger;
               var contrast = $(this).parent().find(".control.contrast").slider("value");
               var brightness = $(this).parent().find(".control.brightness").slider("value");
               _updateImage("brightness", {brightness:brightness, contrast:contrast})
@@ -167,6 +184,24 @@
           open: function(event,ui){
             $(this).find(".width-show .width").html(image().width());
             $(this).find(".height-show .height").html(image().height());
+            
+            $(this).find("input").keyup(function(){
+              var $input = $(this);
+              var result = 0;
+              var side = "";
+              if(!isNumber($input.val()))
+                return false;
+              if(isNumber($input.parent().find("#width").val()) && isNumber($input.parent().find("#height").val()))
+                return false;
+              if ($input.attr("id") == "width"){
+                side = "height";
+                result = _rule_of_thumb(image().width(), $input.val(), image().height());
+              }else{
+                side = "width";
+                result = _rule_of_thumb(image().height(), $input.val(), image().width());
+              };
+              $(this).parent().find(".suggestion").html("suggested "+side+": "+parseInt(result));
+            });
           },
           buttons: {
             Save: function() {
@@ -209,15 +244,30 @@
         
       };
       
+      function _postImage(url, image_bin){
+        window.prompt("Posting to: "+url, image_bin);
+        inputs.save.attr("disabled", "disabled");
+        $.ajax(url,{mg : image,
+          complete : function(jqXHR, textStatus){
+                      inputs.save.removeAttr("disabled");
+                      if(settings.after_save){
+                        settings.after_save(jqXHR, textStatus);
+                      };
+                    },
+        });
+      };
+      
       function _saveImage(){
-        var current_image = image()[0].toDataURL();
+        var current_image = image()[0].toDataURL('image/jpeg');
         var thumb = current_image;
-        window.prompt ("I will save that image:", current_image)
+        var save_image_url = settings.save_image_url || image().data("save-image-url");
+        var save_thumb_url = settings.save_thumb_url || image().data("save-thumb-url");
         var selected_area = selection.getSelection();
         if(!selected_area.width == "0"){
-          thumb = _cloneImage().pixastic("crop", _selectionArea(selected_area))[0].toDataURL();
+          thumb = _cloneImage().pixastic("crop", _selectionArea(selected_area))[0].toDataURL('image/jpeg');
         };
-        window.prompt ("and I'll save that thumb:", thumb);
+        _postImage(save_image_url, current_image);
+        _postImage(save_thumb_url, thumb);
       };
       
       function _bindActions(){
