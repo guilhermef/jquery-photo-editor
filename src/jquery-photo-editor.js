@@ -259,9 +259,10 @@
       };
       
       function _postImage(url, image_bin){
-        window.prompt("Posting to: "+url, image_bin);
         inputs.save.attr("disabled", "disabled");
-        $.ajax(url,{mg : image,
+        $.ajax(url,{
+          data: {image:image_bin},
+          type: "POST",
           complete : function(jqXHR, textStatus){
                       inputs.save.removeAttr("disabled");
                       settings.after_save(jqXHR, textStatus);
@@ -304,8 +305,19 @@
       };
       
       function _initCanvas(){
-          image().pixastic("brightness");
-      }
+          var $new_canvas = $("<canvas />");
+          $new_canvas.attr("width", image().width());
+          $new_canvas.attr("height", image().height());
+          $new_canvas.attr("class", image().attr("class"));
+          var ctx = $new_canvas[0].getContext("2d");
+          var img = new Image();  
+          img.onload = function(){  
+            ctx.drawImage(img,0,0);  
+          };  
+          img.src = image().attr("src");
+          image().replaceWith($new_canvas);
+      };
+      
       _initCanvas();
       _bindSelectBox();
       _drawInputs();
