@@ -72,7 +72,7 @@
     
     var settings = {
         previewSize : 200,
-        editableClass : '.editable',
+        after_save : function(){},
     };
     
     return this.each(function() {        
@@ -264,9 +264,7 @@
         $.ajax(url,{mg : image,
           complete : function(jqXHR, textStatus){
                       inputs.save.removeAttr("disabled");
-                      if(settings.after_save){
-                        settings.after_save(jqXHR, textStatus);
-                      };
+                      settings.after_save(jqXHR, textStatus);
                     },
         });
       };
