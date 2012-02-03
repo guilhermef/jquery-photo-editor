@@ -1,3 +1,17 @@
+/*
+ * jQuery Photo Editor v0.1
+ *
+ * Copyright 2012, Guilherme Souza (https://github.com/guilhermef/jquery-photo-editor)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * dependencies:
+ *  jquery - 1.7.1+
+ *  jquery.ui - 1.8.17+
+ *  jquery.ui.dialog
+ *  jquery.ui.slider
+ *  pixastic.js
+ *  
+ */
 (function( $ ){
 
   $.fn.JPhotoEditor = function( options ) {  
