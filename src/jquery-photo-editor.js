@@ -311,11 +311,11 @@
           $new_canvas.attr("class", image().attr("class"));
           var ctx = $new_canvas[0].getContext("2d");
           var img = new Image();  
-          img.onload = function(){  
-            ctx.drawImage(img,0,0);  
-          };  
           img.src = image().attr("src");
-          image().replaceWith($new_canvas);
+          img.onload = function(){  
+            ctx.drawImage(img,0,0);
+            image().replaceWith($new_canvas);
+          };  
       };
       
       _initCanvas();
