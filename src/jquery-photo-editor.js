@@ -304,7 +304,7 @@
           });
       };
       
-      function _initCanvas(){
+      function _initCanvas(callback){
           var $img_tag = image();
           var $new_canvas = $("<canvas />").appendTo($container);
           var img = new Image();  
@@ -315,13 +315,16 @@
             $new_canvas.attr("class", image().attr("class"));
             $new_canvas[0].getContext("2d").drawImage(img,0,0);
             $img_tag.remove();
+            callback();
           };  
       };
+      function _finishLoading(){
+        _bindSelectBox();
+        _drawInputs();
+        _bindActions();
+      };
       
-      _initCanvas();
-      _bindSelectBox();
-      _drawInputs();
-      _bindActions();
+      _initCanvas(_finishLoading);
     });
     
     function isNumber(n) {
