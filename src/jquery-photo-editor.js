@@ -305,16 +305,16 @@
       };
       
       function _initCanvas(){
-          var $new_canvas = $("<canvas />");
-          $new_canvas.attr("width", image().width());
-          $new_canvas.attr("height", image().height());
-          $new_canvas.attr("class", image().attr("class"));
-          var ctx = $new_canvas[0].getContext("2d");
+          var $img_tag = image();
+          var $new_canvas = $("<canvas />").appendTo($container);
           var img = new Image();  
-          img.src = image().attr("src");
-          img.onload = function(){  
-            ctx.drawImage(img,0,0);
-            image().replaceWith($new_canvas);
+          img.src = $img_tag.attr("src");
+          img.onload = function(){
+            $new_canvas.attr("width", image().width());
+            $new_canvas.attr("height", image().height());
+            $new_canvas.attr("class", image().attr("class"));
+            $new_canvas[0].getContext("2d").drawImage(img,0,0);
+            $img_tag.remove();
           };  
       };
       
